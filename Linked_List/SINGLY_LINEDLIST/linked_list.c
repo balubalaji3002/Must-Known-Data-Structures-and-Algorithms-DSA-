@@ -1,55 +1,76 @@
-#include <stdio.h>
-#include <stdlib.h>
-//stdlib is included because we will be using  'malloc'
+#include<stdio.h>
+#include<stdlib.h>
 
-// creating a node in linked list
 struct Node
 {
   int data;
   struct Node *next;
-  // Pointer pointing towards next node
 };
 
-//function to print the linked list
-void display (struct Node *node)
+void deleteStart (struct Node **head)
 {
-  while (node != NULL)
+  struct Node *temp = *head;
+
+  // if there are no nodes in Linked List can't delete
+  if (*head == NULL)
     {
-      printf (" %d ", node->data);
-      node = node->next;
+      printf ("Linked List Empty, nothing to delete");
+      return;
     }
+
+  // move head to next node
+  *head = (*head)->next;
+
+  printf ("\n%d deleted\n", temp->data);
+  free (temp);
 }
 
-// main function
+void insertStart (struct Node **head, int data)
+{
+
+  // dynamically create memory for this newNode
+  struct Node *newNode = (struct Node *) malloc (sizeof (struct Node));
+
+  // assign data value
+  newNode->data = data;
+  // change the next node of this newNode 
+  // to current head of Linked List
+  newNode->next = *head;
+
+  //re-assign head to this newNode
+  *head = newNode;
+  printf ("\n%d Inserted\n", newNode->data);
+}
+
+void display (struct Node *node)
+{
+  printf ("\nLinked List: ");
+
+  // as linked list will end when Node is Null
+  while (node != NULL)
+    {
+      printf ("%d ", node->data);
+      node = node->next;
+    }
+  printf ("\n");
+}
+
 int main ()
 {
-  //creating 4 pointers of type struct Node
-  //So these can point to address of struct type variable
   struct Node *head = NULL;
-  struct Node *node2 = NULL;
-  struct Node *node3 = NULL;
-  struct Node *node4 = NULL;
 
-  // allocate 3 nodes in the heap 
-  head = (struct Node *) malloc (sizeof (struct Node));
-  node2 = (struct Node *) malloc (sizeof (struct Node));
-  node3 = (struct Node *) malloc (sizeof (struct Node));
-  node4 = (struct Node *) malloc (sizeof (struct Node));
+  // Need '&' i.e. address as we need to change head
+  insertStart (&head, 100);
+  insertStart (&head, 80);
+  insertStart (&head, 60);
+  insertStart (&head, 40);
+  insertStart (&head, 20);
 
+  // No Need for '&' as not changing head in display operation
+  display (head);
 
-  head->data = 10;		// data set for head node 
-  head->next = node2;		// next pointer assigned to address of node2 
-
-  node2->data = 20;
-  node2->next = node3;
-
-  node3->data = 30;
-  node3->next = node4;
-
-  node4->data = 40;
-  node4->next = NULL;
-
-
+  deleteStart (&head);
+  deleteStart (&head);
   display (head);
 
   return 0;
